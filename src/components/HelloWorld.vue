@@ -3,6 +3,10 @@
     <p>{{ defaultText }}</p>
     <input type="text" v-model="url" />
     <button @click="testAlert">Botao</button>
+    <video controls v-if='src !== ""'>
+      <source v-bind:src="src" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </video>
   </div>
 </template>
 
@@ -14,6 +18,7 @@ export default {
   data() {
     return {
       url: "",
+      src: "",
     };
   },
   mounted() {
@@ -26,19 +31,17 @@ export default {
   },
   methods: {
     async testAlert() {
-      ytdl(
-        this.url,
-        {
-          format: "mp3",
-          filter: "audioonly",
-        }
-      ).on("response", (response) => {
-      console.log(response.url);
-      var a = document.createElement("a");
-      a.href = response.url;
-      // a.setAttribute("download", "");
-      a.setAttribute("target","_blank")
-      a.click();
+      ytdl(this.url, {
+        format: "mp3",
+        filter: "audioonly",
+      }).on("response", (response) => {
+        console.log(response.url);
+        this.src = response.url;
+        // var a = document.createElement("a");
+        // a.href = response.url;
+        // a.setAttribute("download", "");
+        // a.setAttribute("target","_blank")
+        // a.click();
       });
     },
   },
